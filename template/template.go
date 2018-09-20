@@ -169,36 +169,36 @@ func (t *Struct) Template(w io.Writer, lang Language) error {
 	if err = tmpl.Execute(w, t); err != nil {
 		return err
 	}
-	for i, v := range t.Fields {
+	for _, v := range t.Fields {
 		if err = v.Template(w, lang); err != nil {
 			return err
 		}
-		if i < len(t.Fields)-1 {
-			tmpl, err = newTemplate(lang, fieldClose)
-			if err != nil {
-				return err
-			}
-			if err = tmpl.Execute(w, nil); err != nil {
-				return err
-			}
-			tmpl, err = newTemplate(lang, comment)
-			if err != nil {
-				return err
-			}
-			if err = tmpl.Execute(w, v); err != nil {
-				return err
-			}
-		} else {
-			tmpl, err = newTemplate(lang, comment)
-			if err != nil {
-				return err
-			}
-			if err = tmpl.Execute(w, v); err != nil {
-				return err
-			}
-			Raw(w, "\n")
+		// if i < len(t.Fields)-1 {
+		tmpl, err = newTemplate(lang, fieldClose)
+		if err != nil {
+			return err
 		}
+		if err = tmpl.Execute(w, nil); err != nil {
+			return err
+		}
+		tmpl, err = newTemplate(lang, comment)
+		if err != nil {
+			return err
+		}
+		if err = tmpl.Execute(w, v); err != nil {
+			return err
+		}
+		// } else {
+		// 	tmpl, err = newTemplate(lang, comment)
+		// 	if err != nil {
+		// 		return err
+		// 	}
+		// 	if err = tmpl.Execute(w, v); err != nil {
+		// 		return err
+		// 	}
+		// }
 	}
+	Raw(w, "\n")
 	tmpl, err = newTemplate(lang, structClose)
 	if err != nil {
 		return err
